@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StudentActivity"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/activity_student_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:paddingStart="15dp"
+        android:text="@string/choose_group"
+        android:textAppearance="@style/Theme.Label"
+        />
+
+
+    <Spinner
+        android:id="@+id/activity_student_groupList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+
+        android:paddingStart="10dp"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/activity_student_now"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingStart="15dp"
+            tools:text="@string/now"
+            />
+
+        <TextView
+            android:id="@+id/activity_student_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingStart="15dp"
+            tools:text="@string/mocktime"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/activity_student_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:paddingStart="15dp"
+        android:textAppearance="@style/Theme.Value"
+        tools:text="@string/status"
+        />
+
+    <TextView
+        android:id="@+id/activity_student_subject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="15dp"
+        tools:text="@string/subject" />
+
+    <TextView
+        android:id="@+id/activity_student_cabinet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="15dp"
+        tools:text="@string/cab"
+        />
+
+    <TextView
+        android:id="@+id/activity_student_building"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="15dp"
+        tools:text="@string/corp"
+        />
+    <TextView
+        android:id="@+id/activity_student_teacher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="15dp"
+        tools:text="@string/teacher"
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+
+        android:orientation="horizontal"
+        android:showDividers="middle"
+        android:layout_marginTop="10dp" >
+
+        <Button
+            android:id="@+id/activity_student_button_day"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginEnd="1.5dp"
+            android:layout_weight="1"
+            android:lines="2"
+            android:text="@string/timetable_day"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/activity_student_button_week"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="1.5dp"
+            android:layout_weight="1"
+            android:lines="2"
+            android:text="@string/timetable_week"
+            android:textAlignment="center" />
+    </LinearLayout>
+</LinearLayout>

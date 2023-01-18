@@ -14,5 +14,11 @@
     <string name="teacher">Преподаватель:</string>
     <string name="now">Сейчас:</string>
     <string name="mocktime">12:00 Понедельник</string>
+    <string name="Settings">Настройки</string>
+    <string name="SaveTextRussian">Cохранить</string>
+    <string name="ChoosePhoto">Укажите фото:</string>
+    <string name="MakePhotoTextRus">Сделать фото</string>
+    <string name="IlluminationTextRus">Текущая освещённость</string>
+    <string name="InsertName">Укажите ваше имя</string>
 
 </resources>

@@ -18,6 +18,14 @@
         <item name="android:paddingStart">15dp</item>
     </style>
 
+    <style name="DarkBlue">
+        <item name="android:color">@color/colorPrimaryVariant</item>
+    </style>
+
+    <style name="LightBlue">
+        <item name="android:color">@color/colorPrimary</item>
+    </style>
+
     <style name="Theme.Value" parent="android:TextAppearance">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

@@ -17,23 +17,21 @@ public class MainActivity extends AppCompatActivity {
 
         View buttonStudent = findViewById(R.id.buttonstud);
         View buttonTeacher = findViewById(R.id.buttonprof);
+        View buttonSettings = findViewById(R.id.buttonSettings);
 
-        buttonStudent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        buttonStudent.setOnClickListener(view -> {
 //                getText(buttonStudent);
-                showStudent();
-            }
+            showStudentActivity();
         });
 
-        buttonTeacher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        buttonTeacher.setOnClickListener(view -> {
 //                getText(buttonTeacher);
-                showTeacher();
-            }
+            showTeacherActivity();
         });
 
+        buttonSettings.setOnClickListener(view -> {
+            showSettingsActivity();
+        });
     }
 
     private void getText(View b){
@@ -41,12 +39,17 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, button.getText().toString(), Toast.LENGTH_SHORT).show();
     }
 
-    private void showStudent() {
+    private void showStudentActivity() {
         Intent intent = new Intent(this, StudentActivity.class);
         startActivity(intent);
     }
-    private void showTeacher() {
+    private void showTeacherActivity() {
         Intent intent = new Intent(this, TeacherActivity.class);
         startActivity(intent);
     }
+    private void showSettingsActivity() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
 }

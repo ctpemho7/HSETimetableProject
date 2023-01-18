@@ -4,8 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Semyon/AndroidStudioProjects/BaseProject/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/Semyon/AndroidStudioProjects/BaseProject/app/src/main/res/layout/activity_settings.xml" value="0.264" />
         <entry key="..\:/Users/Semyon/AndroidStudioProjects/BaseProject/app/src/main/res/layout/activity_student.xml" value="0.2" />
-        <entry key="..\:/Users/Semyon/AndroidStudioProjects/BaseProject/app/src/main/res/layout/activity_teacher.xml" value="0.16799999999999998" />
+        <entry key="..\:/Users/Semyon/AndroidStudioProjects/BaseProject/app/src/main/res/layout/activity_teacher.xml" value="0.2129115006412997" />
+        <entry key="..\:/Users/Semyon/AndroidStudioProjects/BaseProject/app/src/main/res/xml/file_paths.xml" value="0.1" />
         <entry key="..\:/Users/Semyon/AppData/Local/Android/Sdk/platforms/android-32/data/res/layout/simple_spinner_dropdown_item.xml" value="0.1" />
       </map>
     </option>

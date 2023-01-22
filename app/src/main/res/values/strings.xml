@@ -20,5 +20,7 @@
     <string name="MakePhotoTextRus">Сделать фото</string>
     <string name="IlluminationTextRus">Текущая освещённость</string>
     <string name="InsertName">Укажите ваше имя</string>
+    <string name="titleShowExplanation">Нужно предоставить права</string>
+    <string name="messageShowExplanation">Для съёмки фото нужно предоставить права</string>
 
 </resources>

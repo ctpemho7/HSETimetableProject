@@ -24,17 +24,23 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/ChoosePhoto" />
+                android:layout_weight="1"
+                android:text="@string/ChoosePhoto"
+                />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/ProfilePic"
+                android:layout_width="165dp"
+                android:layout_height="165dp"
+                android:layout_gravity="left"
+                android:layout_weight="1"
                 tools:srcCompat="@tools:sample/avatars" />
 
             <Button
                 android:id="@+id/ButtonMakePhoto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/MakePhotoTextRus"
                 />
         </LinearLayout>
@@ -57,7 +63,7 @@
                 android:text="@string/IlluminationTextRus" />
 
             <TextView
-                android:id="@+id/TextViewIllumination"
+                android:id="@+id/TextViewLightSensor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="аыаыа" />
@@ -72,5 +78,11 @@
         android:layout_marginTop="10dp"
         android:text="@string/SaveTextRussian"
         android:theme="@style/DarkBlue"
+        />
+
+    <ListView
+        android:id="@+id/listViewSensors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         />
 </LinearLayout>

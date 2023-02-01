@@ -126,7 +126,9 @@ public class SettingsActivity extends AppCompatActivity implements SensorEventLi
                 showExplanation(getString(R.string.titleShowExplanation), getString(R.string.messageShowExplanation),
                         PERMISSION, REQUEST_PERMISSION_CODE);
             } else {
-                requestPermissions(new String[] {PERMISSION}, REQUEST_PERMISSION_CODE);
+                ActivityCompat.requestPermissions(this, new String[] {PERMISSION}, REQUEST_PERMISSION_CODE);
+
+//                requestPermissions(new String[] {PERMISSION}, REQUEST_PERMISSION_CODE);
             }
         } else {
             dispatchTakePictureIntent();
@@ -139,7 +141,7 @@ public class SettingsActivity extends AppCompatActivity implements SensorEventLi
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title)
                 .setMessage(message)
-                .setPositiveButton("Дать разрешение", (dialog, id) -> {
+                .setPositiveButton(R.string.GivePermission, (dialog, id) -> {
                     // дейстиве у кнопки
                     ActivityCompat.requestPermissions(this, new String[] {permission}, permissionRequestCode);
                 });
@@ -181,6 +183,7 @@ public class SettingsActivity extends AppCompatActivity implements SensorEventLi
         File FilePath = new File(getFilesDir(), "Pictures");
         FilePath.mkdir();
 
+//        temp file
         return new File(FilePath.getPath(),
                 String.format("%s.img", imageFileName));
     }
@@ -265,7 +268,9 @@ public class SettingsActivity extends AppCompatActivity implements SensorEventLi
             ed.putString(key, value);
             ed.apply();
 
-            Toast.makeText(context, "Данные изменены", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,
+                    R.string.DataChangedRus,
+                    Toast.LENGTH_SHORT).show();
         }
 
         public String loadValue(String key) {
@@ -274,7 +279,9 @@ public class SettingsActivity extends AppCompatActivity implements SensorEventLi
 //            // String savedText = sPref.getString(SAVED_NAME, "");
 //            // editText.setText(savedText);
 
-            Toast.makeText(context, "Данные считаны", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,
+                    R.string.DataGetRus,
+                    Toast.LENGTH_SHORT).show();
             return sPref.getString(key, "");
         }
     }

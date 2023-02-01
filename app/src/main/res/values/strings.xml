@@ -22,5 +22,8 @@
     <string name="InsertName">Укажите ваше имя</string>
     <string name="titleShowExplanation">Нужно предоставить права</string>
     <string name="messageShowExplanation">Для съёмки фото нужно предоставить права</string>
+    <string name="GivePermission">Дать разрешение</string>
+    <string name="DataChangedRus">Данные изменены</string>
+    <string name="DataGetRus">Данные считаны</string>
 
 </resources>

@@ -2,13 +2,18 @@ package com.example.baseproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.example.baseproject.shedulefiles.ScheduleMode;
+import com.example.baseproject.shedulefiles.ScheduleType;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,17 +22,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class TeacherActivity extends AppCompatActivity {
-    private TextView time, status, subject, cabinet, corp, teacher;
-    Date currentTime;
+public class TeacherActivity extends BaseActivity {
+    private TextView status, subject, cabinet, corp, teacher;
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher);
 
-        final Spinner spinner = findViewById(R.id.activity_teacher_groupList);
-        List<StudentActivity.Group> groups = new ArrayList<>();
+        spinner = findViewById(R.id.activity_teacher_groupList);
+        List<Group> groups = new ArrayList<>();
         initGroupList(groups);
 
         ArrayAdapter<?> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, groups);
@@ -47,7 +52,6 @@ public class TeacherActivity extends AppCompatActivity {
         });
 
         time = findViewById(R.id.activity_teacher_time);
-        initTime();
 
         status = findViewById(R.id.activity_teacher_status);
         subject = findViewById(R.id.activity_teacher_subject);
@@ -56,25 +60,23 @@ public class TeacherActivity extends AppCompatActivity {
         teacher = findViewById(R.id.activity_teacher_teacher);
 
         initData();
+        initTime();
+
+        /// new
+        Button scheduleDay = findViewById(R.id.activity_teacher_button_day);
+        Button scheduleWeek = findViewById(R.id.activity_teacher_button_week);
+
+        scheduleDay.setOnClickListener(v -> showSchedule(ScheduleType.DAY));
+        scheduleWeek.setOnClickListener(v -> showSchedule(ScheduleType.WEEK));
     }
 
 
-    private void initGroupList(List<StudentActivity.Group> groups)
+    private void initGroupList(List<Group> groups)
     {
-        groups.add(new StudentActivity.Group(1, "Преподаватель 1"));
-        groups.add(new StudentActivity.Group(2, "Преподаватель 2"));
-        groups.add(new StudentActivity.Group(2, "Преподаватель 3"));
+        groups.add(new Group(1, "Преподаватель 1"));
+        groups.add(new Group(2, "Преподаватель 2"));
+        groups.add(new Group(2, "Преподаватель 3"));
     }
-
-
-    private void initTime(){
-        Date date  = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm, EEEE", Locale.forLanguageTag("ru"));
-
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
-        time.setText(simpleDateFormat.format(date));
-    }
-
 
 
     private void initData(){
@@ -84,4 +86,21 @@ public class TeacherActivity extends AppCompatActivity {
         corp.setText(R.string.corp);
         teacher.setText(R.string.teacher);
     }
+
+    private void showSchedule(ScheduleType type){
+        Object selectedItem = spinner.getSelectedItem();
+        if (!(selectedItem instanceof Group)){
+            return;
+        }
+        showScheduleImpl(ScheduleMode.TEACHER, type, (Group)selectedItem);
+    }
+
+
+////    private void initTime(){
+////        Date date  = new Date();
+////        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm, EEEE", Locale.forLanguageTag("ru"));
+////
+////        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
+////        time.setText(simpleDateFormat.format(date));
+////    }
 }

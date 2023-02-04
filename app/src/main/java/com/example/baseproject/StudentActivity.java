@@ -1,44 +1,42 @@
 package com.example.baseproject;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
+import com.example.baseproject.shedulefiles.ScheduleMode;
+import com.example.baseproject.shedulefiles.ScheduleType;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Formatter;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
-public class StudentActivity extends AppCompatActivity {
-    private TextView time, status, subject, cabinet, corp, teacher;
-    Date currentTime;
 
+
+public class StudentActivity extends BaseActivity {
+    private TextView status, subject, cabinet, corp, teacher;
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student);
-//        enumeration(course, year, groupNumber);
-        final Spinner spinner = findViewById(R.id.activity_student_groupList);
 
+
+        //enumeration(course, year, groupNumber);
+        spinner = findViewById(R.id.activity_student_groupList);
         List<Group> groups = new ArrayList();
         initGroupList(groups);
-
         ArrayAdapter<?> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, groups);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         spinner.setAdapter(adapter);
-
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             public void onItemSelected(AdapterView<?> parent,
                                        View itemSelected, int selectedItemPosition, long selectedID) {
@@ -52,15 +50,40 @@ public class StudentActivity extends AppCompatActivity {
         });
 
         time = findViewById(R.id.activity_student_time);
-        initTime();
-
+        /////// все штуки
         status = findViewById(R.id.activity_student_status);
         subject = findViewById(R.id.activity_student_subject);
         cabinet = findViewById(R.id.activity_student_cabinet);
         corp = findViewById(R.id.activity_student_building);
         teacher = findViewById(R.id.activity_student_teacher);
 
+        initTime();
         initData();
+
+
+        /// new
+        Button scheduleDay = findViewById(R.id.activity_student_button_day);
+        Button scheduleWeek = findViewById(R.id.activity_student_button_week);
+
+        scheduleDay.setOnClickListener(v -> showSchedule(ScheduleType.DAY));
+        scheduleWeek.setOnClickListener(v -> showSchedule(ScheduleType.WEEK));
+    }
+
+
+
+    private void initGroupList(List<Group> groups)
+    {
+        List<List<String>> lists = Arrays.asList(
+                Arrays.asList("ПИ","БИ"),
+                Arrays.asList("19", "20"),
+                Arrays.asList("1", "2", "3"));
+
+        List<String> result = new ArrayList<>();
+
+        generatePermutations(lists, result, 0, "");
+
+        for (int i = 1; i <= result.size(); i++)
+            groups.add(new Group(i, result.get(i-1).substring(1)));
     }
 
     static void generatePermutations(List<List<String>> lists, List<String> result, int depth, String current) {
@@ -75,28 +98,6 @@ public class StudentActivity extends AppCompatActivity {
         }
     }
 
-    private void initGroupList(List<StudentActivity.Group> groups)
-    {
-        List<List<String>> lists = Arrays.asList(
-                Arrays.asList("ПИ","БИ"),
-                Arrays.asList("19", "20"),
-                Arrays.asList("1", "2", "3"));
-
-        List<String> result = new ArrayList<>();
-
-        generatePermutations(lists, result, 0, "");
-
-        for (int i = 1; i <= result.size(); i++)
-            groups.add(new StudentActivity.Group(i, result.get(i-1).substring(1)));
-    }
-
-    private void initTime(){
-        Date date  = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm, EEEE", Locale.forLanguageTag("ru"));
-
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
-        time.setText(simpleDateFormat.format(date));
-    }
 
     private void initData(){
         status.setText(R.string.status);
@@ -107,34 +108,20 @@ public class StudentActivity extends AppCompatActivity {
     }
 
 
-    static class Group {
-        private Integer id;
-        private String name;
-
-        public Group(Integer id, String name) {
-            this.id = id;
-            this.name = name;
+    private void showSchedule(ScheduleType type){
+        Object selectedItem = spinner.getSelectedItem();
+        if (!(selectedItem instanceof Group)){
+            return;
         }
-
-        public Integer getId() {
-            return this.id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
+        showScheduleImpl(ScheduleMode.STUDENT, type, (Group)selectedItem);
     }
+
+
+////    private void initTime(){
+////        Date date  = new Date();
+////        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm, EEEE", Locale.forLanguageTag("ru"));
+////
+////        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
+////        time.setText(simpleDateFormat.format(date));
+////    }
 }

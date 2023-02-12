@@ -1,4 +1,4 @@
-package com.example.baseproject;
+package com.example.baseproject.utils;
 
 import androidx.annotation.NonNull;
 

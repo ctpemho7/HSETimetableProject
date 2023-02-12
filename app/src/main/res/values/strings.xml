@@ -25,5 +25,6 @@
     <string name="GivePermission">Дать разрешение</string>
     <string name="DataChangedRus">Данные изменены</string>
     <string name="DataGetRus">Данные считаны</string>
+    <string name="lesson_in_progress">Идёт пара</string>
 
 </resources>

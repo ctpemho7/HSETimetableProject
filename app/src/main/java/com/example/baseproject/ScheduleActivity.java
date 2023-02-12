@@ -17,6 +17,7 @@ import com.example.baseproject.shedulefiles.ScheduleMode;
 import com.example.baseproject.shedulefiles.ScheduleType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ScheduleActivity extends BaseActivity {
@@ -26,10 +27,12 @@ public class ScheduleActivity extends BaseActivity {
     private ScheduleMode mode;
     private String name;
     private TextView title;
+    private Date date;
 
     public static String ARG_TYPE = "ARG_TYPE";
     public static String ARG_MODE = "ARG_MODE";
     public static String ARG_NAME = "ARG_NAME";
+    public static String ARG_DATE = "ARG_DATE";
 
 
     RecyclerView recyclerView;
@@ -44,11 +47,13 @@ public class ScheduleActivity extends BaseActivity {
         type = (ScheduleType) getIntent().getSerializableExtra(ARG_TYPE);
         mode = (ScheduleMode) getIntent().getSerializableExtra(ARG_MODE);
         name = getIntent().getStringExtra(ARG_NAME);
+        date = (Date) getIntent().getSerializableExtra(ARG_DATE);
 
         title = findViewById(R.id.title);
         time = findViewById(R.id.time);
 
         recyclerView = findViewById(R.id.listView);
+                                        // DEFAULT_ORIENTATION = VERTICAL
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         adapter = new ItemAdapter(new OnItemClick() {

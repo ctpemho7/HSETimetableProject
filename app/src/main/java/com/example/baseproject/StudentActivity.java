@@ -1,6 +1,5 @@
 package com.example.baseproject;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,8 +9,16 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.lifecycle.Observer;
+
+import com.example.baseproject.database.entities.GroupEntity;
+import com.example.baseproject.database.entities.TimeTableEntity;
+import com.example.baseproject.database.entities.TimeTableWithTeacherEntity;
 import com.example.baseproject.shedulefiles.ScheduleMode;
 import com.example.baseproject.shedulefiles.ScheduleType;
+import com.example.baseproject.utils.Group;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,18 +31,15 @@ public class StudentActivity extends BaseActivity {
     private TextView status, subject, cabinet, corp, teacher;
     private Spinner spinner;
 
+    private ArrayAdapter<Group> adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student);
 
-
         //enumeration(course, year, groupNumber);
         spinner = findViewById(R.id.activity_student_groupList);
-        List<Group> groups = new ArrayList();
-        initGroupList(groups);
-        ArrayAdapter<?> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, groups);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             public void onItemSelected(AdapterView<?> parent,
@@ -49,17 +53,16 @@ public class StudentActivity extends BaseActivity {
             }
         });
 
-        time = findViewById(R.id.activity_student_time);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         /////// все штуки
         status = findViewById(R.id.activity_student_status);
         subject = findViewById(R.id.activity_student_subject);
         cabinet = findViewById(R.id.activity_student_cabinet);
         corp = findViewById(R.id.activity_student_building);
         teacher = findViewById(R.id.activity_student_teacher);
-
-        initTime();
-        initData();
-
+        time = findViewById(R.id.activity_student_time);
 
         /// new
         Button scheduleDay = findViewById(R.id.activity_student_button_day);
@@ -67,23 +70,36 @@ public class StudentActivity extends BaseActivity {
 
         scheduleDay.setOnClickListener(v -> showSchedule(ScheduleType.DAY));
         scheduleWeek.setOnClickListener(v -> showSchedule(ScheduleType.WEEK));
+
+
+        initTime();
+        initData();
+        initGroupList();
     }
 
 
 
-    private void initGroupList(List<Group> groups)
-    {
-        List<List<String>> lists = Arrays.asList(
-                Arrays.asList("ПИ","БИ"),
-                Arrays.asList("19", "20"),
-                Arrays.asList("1", "2", "3"));
+    private void initGroupList(){
+        mainViewModel.getGroups().observe(this, groupEntities -> {
+            List<Group> groupResult = new ArrayList<>();
+            for (GroupEntity groupEntity : groupEntities){
+                groupResult.add(new Group(groupEntity.id, groupEntity.name));
+            }
+            adapter.clear();
+            adapter.addAll(groupResult);
+        });
 
-        List<String> result = new ArrayList<>();
-
-        generatePermutations(lists, result, 0, "");
-
-        for (int i = 1; i <= result.size(); i++)
-            groups.add(new Group(i, result.get(i-1).substring(1)));
+//////        List<List<String>> lists = Arrays.asList(
+//////                Arrays.asList("ПИ","БИ"),
+//////                Arrays.asList("19", "20"),
+//////                Arrays.asList("1", "2", "3"));
+//////
+//////        List<String> result = new ArrayList<>();
+//////
+//////        generatePermutations(lists, result, 0, "");
+//////
+//////        for (int i = 1; i <= result.size(); i++)
+//////            groups.add(new Group(i, result.get(i-1).substring(1)));
     }
 
     static void generatePermutations(List<List<String>> lists, List<String> result, int depth, String current) {
@@ -100,11 +116,7 @@ public class StudentActivity extends BaseActivity {
 
 
     private void initData(){
-        status.setText(R.string.status);
-        subject.setText(R.string.subject);
-        cabinet.setText(R.string.cab);
-        corp.setText(R.string.corp);
-        teacher.setText(R.string.teacher);
+        initDataFromTimeTable(null);
     }
 
 
@@ -116,6 +128,52 @@ public class StudentActivity extends BaseActivity {
         showScheduleImpl(ScheduleMode.STUDENT, type, (Group)selectedItem);
     }
 
+
+    private void initDataFromTimeTable(TimeTableWithTeacherEntity timeTableWithTeacherEntity){
+        if (timeTableWithTeacherEntity == null){
+            status.setText(R.string.status);
+            subject.setText(R.string.subject);
+            cabinet.setText(R.string.cab);
+            corp.setText(R.string.corp);
+            teacher.setText(R.string.teacher);
+            return;
+        }
+            TimeTableEntity timeTableEntity = timeTableWithTeacherEntity.timeTableEntity;
+
+            subject.setText(timeTableEntity.subjName);
+            cabinet.setText(timeTableEntity.cabinet);
+            corp.setText(timeTableEntity.corp);
+            teacher.setText(timeTableWithTeacherEntity.teacherEntity.fio);
+
+            status.setText(R.string.lesson_in_progress);
+    }
+
+
+    @Override
+    protected void showTime(Date dateTime){
+        super.showTime(dateTime);
+        mainViewModel.getTimeTableTeacherByDate(dateTime).observe(this, new Observer<List<TimeTableWithTeacherEntity>>() {
+            @Override
+            public void onChanged(@Nullable List<TimeTableWithTeacherEntity> list) {
+                for (TimeTableWithTeacherEntity listEntity : list){
+                    Log.d("tag", listEntity.timeTableEntity.subjName + " " + listEntity.teacherEntity.fio);
+                    if (getSelectedGroup() != null && getSelectedGroup().getId().equals(listEntity.timeTableEntity.groupId)){
+                        initDataFromTimeTable(listEntity);
+                    }
+                }
+            }
+        });
+    }
+
+    private Group getSelectedGroup(){
+        Object selectedItem = spinner.getSelectedItem();
+
+        if (!(selectedItem instanceof Group)){
+            return null;
+        }
+
+        return (Group) selectedItem;
+    }
 
 ////    private void initTime(){
 ////        Date date  = new Date();

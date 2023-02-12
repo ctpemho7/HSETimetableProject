@@ -1,14 +1,18 @@
 package com.example.baseproject;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.baseproject.ViewModels.MainViewModel;
 import com.example.baseproject.shedulefiles.ScheduleMode;
 import com.example.baseproject.shedulefiles.ScheduleType;
+import com.example.baseproject.utils.Group;
 import com.example.baseproject.utils.TimeResponse;
 import com.google.gson.Gson;
 
@@ -28,6 +32,8 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public abstract class BaseActivity extends AppCompatActivity {
+    protected MainViewModel mainViewModel;
+
     private final static String TAG = "BaseActivity";
     public final static String URL = "http://api.ipgeolocation.io/ipgeo?apiKey=b03018f75ed94023a005637878ec0977";
 
@@ -36,8 +42,17 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected OkHttpClient client = new OkHttpClient();
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel .class);
+    }
+
     protected void initTime() {
-        getTime();
+        if (currentTime != null)
+            getTime();
+        else
+            showTime(currentTime);
     }
 
     protected void getTime() {
@@ -98,6 +113,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         intent.putExtra(ScheduleActivity.ARG_NAME, group.getName());
         intent.putExtra(ScheduleActivity.ARG_MODE, mode);
         intent.putExtra(ScheduleActivity.ARG_TYPE, type);
+        intent.putExtra(ScheduleActivity.ARG_DATE, currentTime);
         startActivity(intent);
     }
 }

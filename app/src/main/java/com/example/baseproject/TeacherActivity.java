@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.lifecycle.Observer;
 
@@ -102,6 +103,7 @@ public class TeacherActivity extends BaseActivity {
             cabinet.setText(R.string.cab);
             corp.setText(R.string.corp);
             teacher.setText(R.string.teacher);
+            Toast.makeText(this, "Сейчас у этого преподавателя нет пар!", Toast.LENGTH_SHORT).show();
             return;
         }
 

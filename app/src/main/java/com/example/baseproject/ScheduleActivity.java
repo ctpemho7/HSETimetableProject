@@ -3,6 +3,7 @@ package com.example.baseproject;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -123,8 +124,12 @@ public class ScheduleActivity extends BaseActivity {
 
 
     private List<ScheduleItem> scheduleBuilder(List<TimeTableWithTeacherEntity> timeTableWithTeacherEntities) {
-        if (timeTableWithTeacherEntities == null)
+        if (timeTableWithTeacherEntities == null ||
+                timeTableWithTeacherEntities.isEmpty()) {
+            Toast.makeText(this, "Нет пар на выбранный период!", Toast.LENGTH_SHORT).show();
             return null;
+        }
+
 
         // для отображения даты
         SimpleDateFormat headerDateFormat = new SimpleDateFormat("EEEE, dd MMMM", new Locale("ru"));
@@ -173,7 +178,6 @@ public class ScheduleActivity extends BaseActivity {
             item.setPlace(place);
             item.setTeacher(teacher_fio);
             list.add(item);
-
         }
         return list;
     }

@@ -26,12 +26,12 @@ public final class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        if (viewType == TYPE_ITEM){
+        if (viewType == TYPE_ITEM) {
             View contractView = inflater.inflate(R.layout.schedule_item, parent, false);
             return new ViewHolder(contractView, context);
         }
 
-        if (viewType == TYPE_HEADER){
+        if (viewType == TYPE_HEADER) {
             View contractView = inflater.inflate(R.layout.schedule_header, parent, false);
             return new ViewHolderHeader(contractView, context);
         }
@@ -54,15 +54,18 @@ public final class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ((ViewHolder) holder).bind(item);
 
         else if (holder instanceof ViewHolderHeader)
-            ((ViewHolderHeader) holder).bind(((ScheduleItemHeader)item).getTitle());
+            ((ViewHolderHeader) holder).bind(((ScheduleItemHeader) item).getTitle());
     }
 
     @Override
     public int getItemCount() {
-        return dataList.size();
+        if (dataList != null)
+            return dataList.size();
+        else
+            return 0;
     }
 
-    public void setDataList(List<ScheduleItem> list){
+    public void setDataList(List<ScheduleItem> list) {
         dataList = list;
     }
 

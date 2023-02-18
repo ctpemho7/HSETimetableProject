@@ -8,11 +8,11 @@
     <string name="choose_teacher">Выберите преподавателя:</string>
 
     <string name="status">Нет пар</string>
-    <string name="subject">Дисциплина:</string>
-    <string name="cab">Кабинет:</string>
-    <string name="corp">Корпус:</string>
-    <string name="teacher">Преподаватель:</string>
-    <string name="now">Сейчас:</string>
+    <string name="subject">Дисциплина</string>
+    <string name="cab">Кабинет</string>
+    <string name="corp">Корпус</string>
+    <string name="teacher">Преподаватель</string>
+    <string name="now">Сейчас</string>
     <string name="mocktime">12:00 Понедельник</string>
     <string name="Settings">Настройки</string>
     <string name="SaveTextRussian">Cохранить</string>

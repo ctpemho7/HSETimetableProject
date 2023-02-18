@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -61,6 +62,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void initTime() {
+//        only for testing
+//        currentTime = Calendar.getInstance().getTime();
+
         if (currentTime == null)
             getTime();
         else

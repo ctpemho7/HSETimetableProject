@@ -188,10 +188,10 @@ public class DatabaseManager {
         timeTableEntity.cabinet = "Ауд. 505";
         timeTableEntity.subGroup = "ПИ-20-2";
         timeTableEntity.subjName = "Базы данных";
-        timeTableEntity.corp = "Студенческая 38";
+        timeTableEntity.corp = "бульвар Гагарина 37а";
         timeTableEntity.type = 2;
-        timeTableEntity.timeStart = dateFromString(getLessonTime(1, 3, 40));
-        timeTableEntity.timeEnd = dateFromString(getLessonTime(1, 5, 0));
+        timeTableEntity.timeStart = dateFromString(getLessonTime(2, 3, 40));
+        timeTableEntity.timeEnd = dateFromString(getLessonTime(2, 5, 0));
         timeTableEntity.groupId = 2;
         timeTableEntity.teacherId = 5;
         timeTables.add(timeTableEntity);

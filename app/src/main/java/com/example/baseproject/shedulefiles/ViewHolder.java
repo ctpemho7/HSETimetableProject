@@ -12,7 +12,6 @@ import com.example.baseproject.R;
 //это всё сопряжается с разметкой
 public class ViewHolder extends RecyclerView.ViewHolder{
     private Context context;
-    private OnItemClick onItemClick;
     private TextView start;
     private TextView end;
     private TextView type;
@@ -20,10 +19,9 @@ public class ViewHolder extends RecyclerView.ViewHolder{
     private TextView place;
     private TextView teacher;
 
-    public ViewHolder(View itemView, Context context, OnItemClick onItemClick) {
+    public ViewHolder(View itemView, Context context) {
         super(itemView);
         this.context = context;
-        this.onItemClick = onItemClick;
         start = itemView.findViewById(R.id.class_start);
         end = itemView.findViewById(R.id.class_end);
         type = itemView.findViewById(R.id.class_type);

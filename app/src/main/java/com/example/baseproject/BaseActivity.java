@@ -2,6 +2,7 @@ package com.example.baseproject;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -33,6 +34,7 @@ import okhttp3.ResponseBody;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected MainViewModel mainViewModel;
+    protected Observer<Date> observerCurrentTime;
 
     private final static String TAG = "BaseActivity";
     public final static String URL = "http://api.ipgeolocation.io/ipgeo?apiKey=b03018f75ed94023a005637878ec0977";
@@ -45,11 +47,21 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainViewModel = new ViewModelProvider(this).get(MainViewModel .class);
+
+                                            // owner и фабрика (второй параметр опционально)
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+        observerCurrentTime = date -> {
+            currentTime = date;
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMMM", new Locale("ru"));
+            time.setText(simpleDateFormat.format(date));
+        };
+
+        mainViewModel.dateMutableLiveData.observe(this, observerCurrentTime);
     }
 
     protected void initTime() {
-        if (currentTime != null)
+        if (currentTime == null)
             getTime();
         else
             showTime(currentTime);
@@ -101,9 +113,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (date == null)
             return;
 
-        currentTime = date;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMMM", new Locale("ru"));
-        time.setText(simpleDateFormat.format(date));
+        // возможно сетить тут!
+        mainViewModel.dateMutableLiveData.setValue(date);
+
+/*//        currentTime = date;
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMMM", new Locale("ru"));
+//        time.setText(simpleDateFormat.format(date));
+*/
     }
 
 
@@ -111,6 +127,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ScheduleActivity.class);
 
         intent.putExtra(ScheduleActivity.ARG_NAME, group.getName());
+        intent.putExtra(ScheduleActivity.ARG_ID, group.getId());
         intent.putExtra(ScheduleActivity.ARG_MODE, mode);
         intent.putExtra(ScheduleActivity.ARG_TYPE, type);
         intent.putExtra(ScheduleActivity.ARG_DATE, currentTime);

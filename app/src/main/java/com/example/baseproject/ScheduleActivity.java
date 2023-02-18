@@ -1,42 +1,61 @@
 package com.example.baseproject;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.viewmodel.CreationExtras;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.baseproject.ViewModels.MainViewModel;
+import com.example.baseproject.database.entities.TimeTableEntity;
+import com.example.baseproject.database.entities.TimeTableWithTeacherEntity;
 import com.example.baseproject.shedulefiles.ItemAdapter;
-import com.example.baseproject.shedulefiles.OnItemClick;
 import com.example.baseproject.shedulefiles.ScheduleItem;
 import com.example.baseproject.shedulefiles.ScheduleItemHeader;
 import com.example.baseproject.shedulefiles.ScheduleMode;
 import com.example.baseproject.shedulefiles.ScheduleType;
+import com.example.baseproject.utils.ScheduleSupportLibrary;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ScheduleActivity extends BaseActivity {
-    private String TAG = "ScheduleActivity";
+    private final String TAG = "ScheduleActivity";
+    private final ScheduleSupportLibrary library = new ScheduleSupportLibrary();
 
     private ScheduleType type;
     private ScheduleMode mode;
     private String name;
+    private Integer id;
     private TextView title;
+    private TextView time;
     private Date date;
 
     public static String ARG_TYPE = "ARG_TYPE";
     public static String ARG_MODE = "ARG_MODE";
     public static String ARG_NAME = "ARG_NAME";
     public static String ARG_DATE = "ARG_DATE";
+    public static String ARG_ID = "ARG_ID";
 
 
-    RecyclerView recyclerView;
-    ItemAdapter adapter;
+    private RecyclerView recyclerView;
+    private ItemAdapter adapter;
+    List<ScheduleItem> listOfScheduleItems = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,24 +66,21 @@ public class ScheduleActivity extends BaseActivity {
         type = (ScheduleType) getIntent().getSerializableExtra(ARG_TYPE);
         mode = (ScheduleMode) getIntent().getSerializableExtra(ARG_MODE);
         name = getIntent().getStringExtra(ARG_NAME);
+        id = (Integer) getIntent().getSerializableExtra(ARG_ID);
         date = (Date) getIntent().getSerializableExtra(ARG_DATE);
 
         title = findViewById(R.id.title);
         time = findViewById(R.id.time);
 
         recyclerView = findViewById(R.id.listView);
-                                        // DEFAULT_ORIENTATION = VERTICAL
+        // DEFAULT_ORIENTATION = VERTICAL
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        adapter = new ItemAdapter(new OnItemClick() {
-            public void onClick(ScheduleItem data) {
-            }
-        });
+        adapter = new ItemAdapter();
         recyclerView.setAdapter(adapter);
 
         initData();
     }
-
 
 
     private void initData() {
@@ -73,22 +89,126 @@ public class ScheduleActivity extends BaseActivity {
         //        initTime
         initTime();
         //        ScheduleItems
-        initScheduleItems();
+        initScheduleItemsWithViewModel();
     }
+
+    @Override
+    protected void initTime() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMMM", new Locale("ru"));
+        time.setText(simpleDateFormat.format(date));
+    }
+
 
     private void initTitle() {
         title.setText(name);
     }
 
 
+    private void initScheduleItemsWithViewModel() {
+
+        Observer<List<TimeTableWithTeacherEntity>> observerForSchedule = new Observer<List<TimeTableWithTeacherEntity>>() {
+            @Override
+            public void onChanged(List<TimeTableWithTeacherEntity> timeTableWithTeacherEntities) {
+                // создать расписание из timeTableWithTeacherEntities
+                listOfScheduleItems = scheduleBuilder(timeTableWithTeacherEntities);
+                // прикрепить его к адаптеру
+                adapter.setDataList(listOfScheduleItems);
+                adapter.notifyDataSetChanged();
+
+            }
+        };
+        filterItem(observerForSchedule);
+
+    }
+
+
+    private List<ScheduleItem> scheduleBuilder(List<TimeTableWithTeacherEntity> timeTableWithTeacherEntities) {
+        if (timeTableWithTeacherEntities == null)
+            return null;
+
+        // для отображения даты
+        SimpleDateFormat headerDateFormat = new SimpleDateFormat("EEEE, dd MMMM", new Locale("ru"));
+        SimpleDateFormat hoursFormat = new SimpleDateFormat("HH:mm", new Locale("ru"));
+
+
+        // сортируем по дате начала каждой пары
+        // предполагается, что у одной группы не может быть одновременно две пары.
+        List<TimeTableWithTeacherEntity> sortedList = timeTableWithTeacherEntities.stream()
+                .sorted(Comparator.comparing(item -> item.timeTableEntity.timeStart))
+                .collect(Collectors.toList());
+
+        // здесь храним расписание
+        List<ScheduleItem> list = new ArrayList<>();
+
+        // для первого элемента
+        String lastDate = "";
+        String currentDate;
+
+        for (TimeTableWithTeacherEntity entity : sortedList) {
+            TimeTableEntity timeTableEntity = entity.timeTableEntity;
+
+            // проверяем, нет ли такой хеадера, если нет, то создаём новый
+            currentDate = headerDateFormat.format(timeTableEntity.timeStart);
+            if (!currentDate.equals(lastDate)){
+
+                ScheduleItemHeader header = new ScheduleItemHeader();
+                header.setTitle(headerDateFormat.format(timeTableEntity.timeEnd));
+                list.add(header);
+
+                lastDate = currentDate;
+            }
+
+            String start = hoursFormat.format(timeTableEntity.timeStart);
+            String end = hoursFormat.format(timeTableEntity.timeEnd);
+            String type = library.getType(timeTableEntity.type);
+            String name = timeTableEntity.subjName;
+            String place = timeTableEntity.cabinet + ", " + timeTableEntity.corp;
+            String teacher_fio = entity.teacherEntity.fio;
+
+            ScheduleItem item = new ScheduleItem();
+            item.setStart(start);
+            item.setEnd(end);
+            item.setType(type);
+            item.setName(name);
+            item.setPlace(place);
+            item.setTeacher(teacher_fio);
+            list.add(item);
+
+        }
+        return list;
+    }
+
+    private void filterItem(Observer<List<TimeTableWithTeacherEntity>> observer) {
+
+        switch (type) {
+            case DAY: {
+                mainViewModel.getTimeTableForDay(date, id, mode).observe(this, observer);
+                Log.d(TAG, "we are in DAY");
+                break;
+            }
+
+            case WEEK: {
+                mainViewModel.getTimeTableForWeek(date, id, mode).observe(this, observer);
+                Log.d(TAG, "we are in WEEK");
+                break;
+            }
+
+            default: {
+                Log.d(TAG, type + " we don't support it");
+                break;
+            }
+        }
+    }
+
+
+
     private void initScheduleItems() {
         List<ScheduleItem> list = null;
 
-        switch (type){
-            case DAY:
-            {
+        switch (type) {
+            case DAY: {
                 list = getDaySchedule();
-                Log.d(TAG,  "we are in DAY");
+                Log.d(TAG, "we are in DAY");
                 break;
             }
 
@@ -99,7 +219,7 @@ public class ScheduleActivity extends BaseActivity {
             }
 
             default: {
-                Log.d(TAG, type.toString() + " we don't support it");
+                Log.d(TAG, type + " we don't support it");
                 break;
             }
         }
@@ -125,6 +245,7 @@ public class ScheduleActivity extends BaseActivity {
 
         return list;
     }
+
     private List<ScheduleItem> getWeekSchedule() {
         List<ScheduleItem> list = new ArrayList<>();
 

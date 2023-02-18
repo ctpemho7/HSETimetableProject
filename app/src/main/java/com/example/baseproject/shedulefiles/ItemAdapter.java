@@ -19,11 +19,6 @@ public final class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final static int TYPE_HEADER = 1;
 
     private List<ScheduleItem> dataList = new ArrayList<>();
-    private OnItemClick onItemClick;
-
-    public ItemAdapter(OnItemClick onItemClick) {
-        this.onItemClick = onItemClick;
-    }
 
     @NonNull
     @Override
@@ -33,7 +28,7 @@ public final class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (viewType == TYPE_ITEM){
             View contractView = inflater.inflate(R.layout.schedule_item, parent, false);
-            return new ViewHolder(contractView, context, onItemClick);
+            return new ViewHolder(contractView, context);
         }
 
         if (viewType == TYPE_HEADER){

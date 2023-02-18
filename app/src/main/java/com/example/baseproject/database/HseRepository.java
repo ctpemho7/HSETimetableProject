@@ -16,20 +16,41 @@ public class HseRepository {
     private DatabaseManager databaseManager;
     private HseDao dao;
 
-    public HseRepository(Context context){
+    public HseRepository(Context context) {
         databaseManager = DatabaseManager.getInstance(context);
         dao = databaseManager.getHseDao();
     }
 
-    public LiveData<List<GroupEntity>> getGroups(){
+    public LiveData<List<GroupEntity>> getGroups() {
         return dao.getAllGroups();
     }
 
-    public LiveData<List<TeacherEntity>> getTeachers(){
+    public LiveData<List<TeacherEntity>> getTeachers() {
         return dao.getAllTeachers();
     }
 
-    public LiveData<List<TimeTableWithTeacherEntity>> getTimeTableTeacherByDate(Date date){
+    public LiveData<List<TimeTableWithTeacherEntity>> getTimeTableTeacherByDate(Date date) {
         return dao.getTimeTableTeacher();
     }
+
+
+    //  по дате и по ID
+    public LiveData<TimeTableWithTeacherEntity> getTimeTableByDateAndGroupId(Date date, int id) {
+        return dao.getTimeTableByDateAndGroupId(date, id);
+    }
+
+    public LiveData<TimeTableWithTeacherEntity> getTimeTableByDateAndTeacherId(Date date, int id) {
+        return dao.getTimeTableByDateAndTeacherId(date, id);
+    }
+
+
+    //  Временной промежуток getTimeTableStudentInRange
+    public LiveData<List<TimeTableWithTeacherEntity>> getTimeTableStudentInRange(Date startDate, Date endDate, int id) {
+        return dao.getTimeTableStudentInRange(startDate, endDate, id);
+    }
+
+    public LiveData<List<TimeTableWithTeacherEntity>> getTimeTableTeacherInRange(Date startDate, Date endDate, int id) {
+        return dao.getTimeTableTeacherInRange(startDate, endDate, id);
+    }
+
 }

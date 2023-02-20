@@ -40,26 +40,6 @@ public class StudentActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student);
 
-        spinner = findViewById(R.id.activity_student_groupList);
-
-        initGroupList();
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            public void onItemSelected(AdapterView<?> parent,
-                                       View itemSelected, int selectedItemPosition, long selectedID) {
-                Object item = adapter.getItem(selectedItemPosition);
-                Log.d("TAG", "selectedItem: " + item);
-                showTime(currentTime);
-            }
-
-            public void onNothingSelected(AdapterView<?> parent) {
-                //
-            }
-        });
-
 
         /////// все штуки
         status = findViewById(R.id.activity_student_status);
@@ -76,6 +56,29 @@ public class StudentActivity extends BaseActivity {
         scheduleDay.setOnClickListener(v -> showSchedule(ScheduleType.DAY));
         scheduleWeek.setOnClickListener(v -> showSchedule(ScheduleType.WEEK));
 
+
+
+
+        spinner = findViewById(R.id.activity_student_groupList);
+
+        initGroupList();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            public void onItemSelected(AdapterView<?> parent,
+                                       View itemSelected, int selectedItemPosition, long selectedID) {
+                Object item = adapter.getItem(selectedItemPosition);
+                Log.d("TAG", "selectedItem: " + item);
+                showTime(timeViewModel.getDate().getValue());
+
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+                //
+            }
+        });
 
         initTime();
         initData();

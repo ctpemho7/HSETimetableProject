@@ -112,7 +112,7 @@ public class DatabaseManager {
         timeTableEntity.corp = "бульвар Гагарина 37а";
         timeTableEntity.type = 0;
         timeTableEntity.timeStart = dateFromString(getLessonTime(0, 0, -5));
-        timeTableEntity.timeEnd = dateFromString(getLessonTime(0, 1, 20));
+        timeTableEntity.timeEnd = dateFromString(getLessonTime(0, 0, 30));
         timeTableEntity.groupId = 2;
         timeTableEntity.teacherId = 1;
         timeTables.add(timeTableEntity);
@@ -125,7 +125,7 @@ public class DatabaseManager {
         timeTableEntity.corp = "бульвар Гагарина 37а";
         timeTableEntity.type = 1;
         timeTableEntity.timeStart = dateFromString(getLessonTime(0, 0, -5));
-        timeTableEntity.timeEnd = dateFromString(getLessonTime(0, 1, 20));
+        timeTableEntity.timeEnd = dateFromString(getLessonTime(0, 0, 30));
         timeTableEntity.groupId = 1;
         timeTableEntity.teacherId = 3;
         timeTables.add(timeTableEntity);

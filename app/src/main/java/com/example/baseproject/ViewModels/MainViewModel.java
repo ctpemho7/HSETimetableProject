@@ -22,7 +22,6 @@ public class MainViewModel extends AndroidViewModel {
     private final HseRepository repository;
     private final ScheduleSupportLibrary library;
 
-   public MutableLiveData<Date> dateMutableLiveData;
 
     // параметр application – особенность AndroidViewModel.
     // это позваоляет нам обратиться к контексту
@@ -31,7 +30,6 @@ public class MainViewModel extends AndroidViewModel {
         super(application);
         repository = new HseRepository(application);
         library = new ScheduleSupportLibrary();
-        dateMutableLiveData = new MutableLiveData<>();
     }
 
     public LiveData<List<GroupEntity>> getGroups() {

@@ -43,7 +43,7 @@ public class ScheduleActivity extends BaseActivity {
     private String name;
     private Integer id;
     private TextView title;
-    private TextView time;
+//    private TextView time;
     private Date date;
 
     public static String ARG_TYPE = "ARG_TYPE";

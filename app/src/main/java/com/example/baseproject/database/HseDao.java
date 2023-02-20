@@ -58,7 +58,7 @@ public interface HseDao {
     // get By Date and ID
     @Transaction
     @Query("SELECT * FROM `time_table` " +
-            " WHERE:date BETWEEN time_start AND time_end " +
+            " WHERE :date BETWEEN time_start AND time_end " +
             " AND group_id = :group_id ")
     LiveData<TimeTableWithTeacherEntity> getTimeTableByDateAndGroupId(Date date, int group_id);
 

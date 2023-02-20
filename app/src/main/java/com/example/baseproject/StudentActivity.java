@@ -123,7 +123,7 @@ public class StudentActivity extends BaseActivity {
             cabinet.setText(R.string.cab);
             corp.setText(R.string.corp);
             teacher.setText(R.string.teacher);
-            Toast.makeText(this, "Сейчас у этой группы нет пар!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Сейчас у этой группы нет пар!", Toast.LENGTH_SHORT).show();
             return;
         }
             TimeTableEntity timeTableEntity = timeTableWithTeacherEntity.timeTableEntity;

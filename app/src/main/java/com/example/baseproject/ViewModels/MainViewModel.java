@@ -47,11 +47,11 @@ public class MainViewModel extends AndroidViewModel {
 
 
     //  по дате и по ID
-    public LiveData<TimeTableWithTeacherEntity> getTimeTableByDateAndGroupId(Date date, int groupId) {
+    public LiveData<List<TimeTableWithTeacherEntity>> getTimeTableByDateAndGroupId(Date date, int groupId) {
         return repository.getTimeTableByDateAndGroupId(date, groupId);
     }
 
-    public LiveData<TimeTableWithTeacherEntity> getTimeTableByDateAndTeacherId(Date date, int groupId) {
+    public LiveData<List<TimeTableWithTeacherEntity>> getTimeTableByDateAndTeacherId(Date date, int groupId) {
         return repository.getTimeTableByDateAndTeacherId(date, groupId);
     }
 

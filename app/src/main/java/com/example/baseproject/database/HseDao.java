@@ -60,13 +60,13 @@ public interface HseDao {
     @Query("SELECT * FROM `time_table` " +
             " WHERE :date BETWEEN time_start AND time_end " +
             " AND group_id = :group_id ")
-    LiveData<TimeTableWithTeacherEntity> getTimeTableByDateAndGroupId(Date date, int group_id);
+    LiveData<List<TimeTableWithTeacherEntity>> getTimeTableByDateAndGroupId(Date date, int group_id);
 
     @Transaction
     @Query("SELECT * FROM `time_table` " +
             " WHERE teacher_id = :teacher_id " +
             " AND :date BETWEEN time_start AND time_end")
-    LiveData<TimeTableWithTeacherEntity> getTimeTableByDateAndTeacherId(Date date, int teacher_id);
+    LiveData<List<TimeTableWithTeacherEntity>> getTimeTableByDateAndTeacherId(Date date, int teacher_id);
 
 
 
@@ -75,14 +75,16 @@ public interface HseDao {
     @Query("SELECT * FROM `time_table` " +
             " WHERE group_id = :group_id " +
             " AND :start <= time_end " +
-            " AND :end >= time_end")
+            " AND :end >= time_end" +
+            " ORDER BY time_start ASC")
     LiveData<List<TimeTableWithTeacherEntity>> getTimeTableStudentInRange(Date start, Date end,  int group_id);
 
     @Transaction
     @Query("SELECT * FROM `time_table` " +
             " WHERE teacher_id = :teacher_id " +
             " AND :start <= time_end " +
-            " AND :end >= time_end")
+            " AND :end >= time_end " +
+            " ORDER BY time_start ASC")
     LiveData<List<TimeTableWithTeacherEntity>> getTimeTableTeacherInRange(Date start, Date end, int teacher_id);
 
 }

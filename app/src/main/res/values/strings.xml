@@ -26,5 +26,6 @@
     <string name="DataChangedRus">Данные изменены</string>
     <string name="DataGetRus">Данные считаны</string>
     <string name="lesson_in_progress">Идёт пара</string>
+    <string name="noLessoms">Нет пар на выбранный период!</string>
 
 </resources>

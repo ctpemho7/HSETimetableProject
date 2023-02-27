@@ -35,11 +35,11 @@ public class HseRepository {
 
 
     //  по дате и по ID
-    public LiveData<TimeTableWithTeacherEntity> getTimeTableByDateAndGroupId(Date date, int id) {
+    public LiveData<List<TimeTableWithTeacherEntity>> getTimeTableByDateAndGroupId(Date date, int id) {
         return dao.getTimeTableByDateAndGroupId(date, id);
     }
 
-    public LiveData<TimeTableWithTeacherEntity> getTimeTableByDateAndTeacherId(Date date, int id) {
+    public LiveData<List<TimeTableWithTeacherEntity>> getTimeTableByDateAndTeacherId(Date date, int id) {
         return dao.getTimeTableByDateAndTeacherId(date, id);
     }
 

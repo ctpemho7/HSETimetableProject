@@ -52,8 +52,6 @@ public class TeacherActivity extends BaseActivity {
         scheduleWeek.setOnClickListener(v -> showSchedule(ScheduleType.WEEK));
 
 
-
-
         spinner = findViewById(R.id.activity_teacher_groupList);
         initGroupList();
 
@@ -66,8 +64,8 @@ public class TeacherActivity extends BaseActivity {
                                        View itemSelected, int selectedItemPosition, long selectedId) {
                 Object item = adapter.getItem(selectedItemPosition);
                 Log.d("TAG", "selectedItem" + item);
-                Log.d("TAG", "time " + timeViewModel.getDate().getValue());
-                showTime(timeViewModel.getDate().getValue());
+                Log.d("TAG", "time " + timeViewModel.dateMutableLiveData.getValue());
+                showTime(timeViewModel.dateMutableLiveData.getValue());
 
             }
 
@@ -92,6 +90,13 @@ public class TeacherActivity extends BaseActivity {
                 }
                 adapter.clear();
                 adapter.addAll(groups);
+            }
+        });
+
+        timeViewModel.dateMutableLiveData.observe(this, new Observer<Date>() {
+            @Override
+            public void onChanged(Date date) {
+                showTime(date);
             }
         });
     }
@@ -139,10 +144,14 @@ public class TeacherActivity extends BaseActivity {
         // по id учителя и текущему времени надо обратиться к getTimeTableByDateAndGroupId и после этого вывести в initDataFromTimeTable
         if (teacher != null) {
             mainViewModel.getTimeTableByDateAndTeacherId(dateTime, teacher.getId())
-                    .observe(this, new Observer<TimeTableWithTeacherEntity>() {
+                    .observe(this, new Observer<List<TimeTableWithTeacherEntity>>() {
                         @Override
-                        public void onChanged(TimeTableWithTeacherEntity timeTableWithTeacherEntity) {
-                            initDataFromTimeTable(timeTableWithTeacherEntity);
+                        public void onChanged(List<TimeTableWithTeacherEntity> timeTableWithTeacherEntities) {
+                            if (timeTableWithTeacherEntities != null &&
+                                    !timeTableWithTeacherEntities.isEmpty())
+                                initDataFromTimeTable(timeTableWithTeacherEntities.get(0));
+                            else
+                                initDataFromTimeTable(null);
                         }
                     });
 

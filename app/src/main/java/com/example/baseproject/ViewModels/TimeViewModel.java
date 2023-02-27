@@ -27,11 +27,6 @@ import okhttp3.ResponseBody;
 
 public class TimeViewModel extends AndroidViewModel  {
     public MutableLiveData<Date> dateMutableLiveData;
-    private String TAG = "TimeViewModel";
-
-    private final static String URL = "http://api.ipgeolocation.io/ipgeo?apiKey=b03018f75ed94023a005637878ec0977";
-    private OkHttpClient client = new OkHttpClient();
-
 
     public TimeViewModel(@NonNull Application application) {
         super(application);
@@ -39,9 +34,9 @@ public class TimeViewModel extends AndroidViewModel  {
     }
 
     // дата
-    public LiveData<Date> getDate(){
-        return dateMutableLiveData;
-    }
+//    public LiveData<Date> getDate(){
+//        return dateMutableLiveData;
+//    }
 
 
 }

@@ -41,6 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public final static String URL = "http://api.ipgeolocation.io/ipgeo?apiKey=b03018f75ed94023a005637878ec0977";
 
     protected TextView time;
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMMM", new Locale("ru"));
 
     protected OkHttpClient client = new OkHttpClient();
 
@@ -53,12 +54,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         timeViewModel = new ViewModelProvider(this).get(TimeViewModel.class);
 
         getTime();
-        timeViewModel.getDate().observe(this, new Observer<Date>() {
-            @Override
-            public void onChanged(Date date) {
-                    showTime(date);
-            }
-        });
     }
 
     protected void initTime() {
@@ -76,7 +71,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (date == null)
             return;
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMMM", new Locale("ru"));
         time.setText(simpleDateFormat.format(date));
     }
 
@@ -88,7 +82,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         intent.putExtra(ScheduleActivity.ARG_ID, group.getId());
         intent.putExtra(ScheduleActivity.ARG_MODE, mode);
         intent.putExtra(ScheduleActivity.ARG_TYPE, type);
-        intent.putExtra(ScheduleActivity.ARG_DATE, timeViewModel.getDate().getValue());
+        intent.putExtra(ScheduleActivity.ARG_DATE, timeViewModel.dateMutableLiveData.getValue());
         startActivity(intent);
     }
 
@@ -125,7 +119,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             Date dateTime = simpleDateFormat.parse(currentTimeVal);
             runOnUiThread(() -> {
                 showTime(dateTime);
-                timeViewModel.dateMutableLiveData.setValue(dateTime);
+                timeViewModel.dateMutableLiveData.postValue(dateTime);
             });
         }
         catch (Exception e){

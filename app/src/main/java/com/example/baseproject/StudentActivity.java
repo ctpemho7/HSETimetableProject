@@ -35,6 +35,7 @@ public class StudentActivity extends BaseActivity {
     private ArrayAdapter<Group> adapter;
 
     private String TAG = "StudentActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +58,6 @@ public class StudentActivity extends BaseActivity {
         scheduleWeek.setOnClickListener(v -> showSchedule(ScheduleType.WEEK));
 
 
-
-
         spinner = findViewById(R.id.activity_student_groupList);
 
         initGroupList();
@@ -66,12 +65,14 @@ public class StudentActivity extends BaseActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent,
                                        View itemSelected, int selectedItemPosition, long selectedID) {
                 Object item = adapter.getItem(selectedItemPosition);
                 Log.d("TAG", "selectedItem: " + item);
-                showTime(timeViewModel.getDate().getValue());
+                Log.d("TAG", "time " + timeViewModel.dateMutableLiveData.getValue());
+
+                showTime(timeViewModel.dateMutableLiveData.getValue());
 
             }
 
@@ -85,8 +86,7 @@ public class StudentActivity extends BaseActivity {
     }
 
 
-
-    private void initGroupList(){
+    private void initGroupList() {
         mainViewModel.getGroups().observe(this, new Observer<List<GroupEntity>>() {
             @Override
             public void onChanged(@Nullable List<GroupEntity> groupEntities) {
@@ -99,25 +99,33 @@ public class StudentActivity extends BaseActivity {
                 Log.d(TAG, groupsResult.toString());
             }
         });
+
+
+        timeViewModel.dateMutableLiveData.observe(this, new Observer<Date>() {
+            @Override
+            public void onChanged(Date date) {
+                showTime(date);
+            }
+        });
     }
 
 
-    private void initData(){
+    private void initData() {
         initDataFromTimeTable(null);
     }
 
 
-    private void showSchedule(ScheduleType type){
+    private void showSchedule(ScheduleType type) {
         Object selectedItem = spinner.getSelectedItem();
-        if (!(selectedItem instanceof Group)){
+        if (!(selectedItem instanceof Group)) {
             return;
         }
-        showScheduleImpl(ScheduleMode.STUDENT, type, (Group)selectedItem);
+        showScheduleImpl(ScheduleMode.STUDENT, type, (Group) selectedItem);
     }
 
 
-    private void initDataFromTimeTable(TimeTableWithTeacherEntity timeTableWithTeacherEntity){
-        if (timeTableWithTeacherEntity == null){
+    private void initDataFromTimeTable(TimeTableWithTeacherEntity timeTableWithTeacherEntity) {
+        if (timeTableWithTeacherEntity == null) {
             status.setText(R.string.status);
             subject.setText(R.string.subject);
             cabinet.setText(R.string.cab);
@@ -126,19 +134,19 @@ public class StudentActivity extends BaseActivity {
 //            Toast.makeText(this, "Сейчас у этой группы нет пар!", Toast.LENGTH_SHORT).show();
             return;
         }
-            TimeTableEntity timeTableEntity = timeTableWithTeacherEntity.timeTableEntity;
+        TimeTableEntity timeTableEntity = timeTableWithTeacherEntity.timeTableEntity;
 
-            subject.setText(timeTableEntity.subjName);
-            cabinet.setText(timeTableEntity.cabinet);
-            corp.setText(timeTableEntity.corp);
-            teacher.setText(timeTableWithTeacherEntity.teacherEntity.fio);
+        subject.setText(timeTableEntity.subjName);
+        cabinet.setText(timeTableEntity.cabinet);
+        corp.setText(timeTableEntity.corp);
+        teacher.setText(timeTableWithTeacherEntity.teacherEntity.fio);
 
-            status.setText(R.string.lesson_in_progress);
+        status.setText(R.string.lesson_in_progress);
     }
 
 
     @Override
-    protected void showTime(Date dateTime){
+    protected void showTime(Date dateTime) {
         super.showTime(dateTime);
 
         Group selectedGroup = getSelectedGroup();
@@ -147,18 +155,24 @@ public class StudentActivity extends BaseActivity {
         if (selectedGroup != null && dateTime != null) {
 
             mainViewModel.getTimeTableByDateAndGroupId(dateTime, selectedGroup.getId())
-                    .observe(this, timeTableWithTeacherEntity -> {
-                        initDataFromTimeTable(timeTableWithTeacherEntity);
-
+                    .observe(this, new Observer<List<TimeTableWithTeacherEntity>>() {
+                        @Override
+                        public void onChanged(List<TimeTableWithTeacherEntity> timeTableWithTeacherEntities) {
+                            if (timeTableWithTeacherEntities != null &&
+                                    !timeTableWithTeacherEntities.isEmpty())
+                                initDataFromTimeTable(timeTableWithTeacherEntities.get(0));
+                            else
+                                initDataFromTimeTable(null);
+                        }
                     });
 
         }
     }
 
-    private Group getSelectedGroup(){
+    private Group getSelectedGroup() {
         Object selectedItem = spinner.getSelectedItem();
 
-        if (!(selectedItem instanceof Group)){
+        if (!(selectedItem instanceof Group)) {
             return null;
         }
 

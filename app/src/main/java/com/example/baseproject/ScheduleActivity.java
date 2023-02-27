@@ -89,25 +89,36 @@ public class ScheduleActivity extends BaseActivity {
         initTitle();
         //        initTime
         initTime();
-        //        ScheduleItems
+        //        scheduleItems
         initScheduleItemsWithViewModel();
     }
 
-    @Override
-    protected void initTime() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMMM", new Locale("ru"));
-        time.setText(simpleDateFormat.format(date));
-    }
+//    @Override
+//    protected void initTime() {
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMMM", new Locale("ru"));
+//
+//        time.setText(simpleDateFormat.format(timeViewModel.getDate().getValue()));
+//    }
 
 
     private void initTitle() {
-        title.setText(name);
+        if (date != null)
+        {
+            title.setText(name);
+            time.setText(simpleDateFormat.format(date));
+        }
     }
 
 
     private void initScheduleItemsWithViewModel() {
 
-        Observer<List<TimeTableWithTeacherEntity>> observerForSchedule = new Observer<List<TimeTableWithTeacherEntity>>() {
+        filterItem();
+
+    }
+
+    private void filterItem() {
+
+        Observer<List<TimeTableWithTeacherEntity>> observer = new Observer<List<TimeTableWithTeacherEntity>>() {
             @Override
             public void onChanged(List<TimeTableWithTeacherEntity> timeTableWithTeacherEntities) {
                 // создать расписание из timeTableWithTeacherEntities
@@ -118,15 +129,32 @@ public class ScheduleActivity extends BaseActivity {
 
             }
         };
-        filterItem(observerForSchedule);
 
+        switch (type) {
+            case DAY: {
+                mainViewModel.getTimeTableForDay(date, id, mode).observe(this, observer);
+                Log.d(TAG, "we are in DAY");
+                break;
+            }
+
+            case WEEK: {
+                mainViewModel.getTimeTableForWeek(date, id, mode).observe(this, observer);
+                Log.d(TAG, "we are in WEEK");
+                break;
+            }
+
+            default: {
+                Log.d(TAG, type + " we don't support it");
+                break;
+            }
+        }
     }
 
 
-    private List<ScheduleItem> scheduleBuilder(List<TimeTableWithTeacherEntity> timeTableWithTeacherEntities) {
-        if (timeTableWithTeacherEntities == null ||
-                timeTableWithTeacherEntities.isEmpty()) {
-            Toast.makeText(this, "Нет пар на выбранный период!", Toast.LENGTH_SHORT).show();
+    private List<ScheduleItem> scheduleBuilder(List<TimeTableWithTeacherEntity> sortedList) {
+        if (sortedList == null ||
+                sortedList.isEmpty()) {
+            Toast.makeText(this, R.string.noLessoms, Toast.LENGTH_SHORT).show();
             return null;
         }
 
@@ -138,9 +166,9 @@ public class ScheduleActivity extends BaseActivity {
 
         // сортируем по дате начала каждой пары
         // предполагается, что у одной группы не может быть одновременно две пары.
-        List<TimeTableWithTeacherEntity> sortedList = timeTableWithTeacherEntities.stream()
-                .sorted(Comparator.comparing(item -> item.timeTableEntity.timeStart))
-                .collect(Collectors.toList());
+//        List<TimeTableWithTeacherEntity> sortedList = timeTableWithTeacherEntities.stream()
+////                .sorted(Comparator.comparing(item -> item.timeTableEntity.timeStart))
+//                .collect(Collectors.toList());
 
         // здесь храним расписание
         List<ScheduleItem> list = new ArrayList<>();
@@ -180,28 +208,6 @@ public class ScheduleActivity extends BaseActivity {
             list.add(item);
         }
         return list;
-    }
-
-    private void filterItem(Observer<List<TimeTableWithTeacherEntity>> observer) {
-
-        switch (type) {
-            case DAY: {
-                mainViewModel.getTimeTableForDay(date, id, mode).observe(this, observer);
-                Log.d(TAG, "we are in DAY");
-                break;
-            }
-
-            case WEEK: {
-                mainViewModel.getTimeTableForWeek(date, id, mode).observe(this, observer);
-                Log.d(TAG, "we are in WEEK");
-                break;
-            }
-
-            default: {
-                Log.d(TAG, type + " we don't support it");
-                break;
-            }
-        }
     }
 
 

@@ -3,13 +3,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class TimeResponse{
     @SerializedName("time_zone")
-    private TimeZone timeZone;
+    private MyTimeZone myTimeZone;
 
-    public TimeZone getTimeZone(){
-        return timeZone;
+    public MyTimeZone getTimeZone(){
+        return myTimeZone;
     }
 
-    public void setTimeZone(TimeZone timeZone) {
-        this.timeZone = timeZone;
+    public void setTimeZone(MyTimeZone myTimeZone) {
+        this.myTimeZone = myTimeZone;
     }
 }

@@ -2,7 +2,7 @@ package com.example.baseproject.utils;
 
 import com.google.gson.annotations.SerializedName;
 
-public class TimeZone{
+public class MyTimeZone {
     @SerializedName("current_time")
     private String currentTime;
 

@@ -149,7 +149,10 @@ public class TeacherActivity extends BaseActivity {
                         public void onChanged(List<TimeTableWithTeacherEntity> timeTableWithTeacherEntities) {
                             if (timeTableWithTeacherEntities != null &&
                                     !timeTableWithTeacherEntities.isEmpty())
+                            {
+                                showTime(timeViewModel.dateMutableLiveData.getValue());
                                 initDataFromTimeTable(timeTableWithTeacherEntities.get(0));
+                            }
                             else
                                 initDataFromTimeTable(null);
                         }

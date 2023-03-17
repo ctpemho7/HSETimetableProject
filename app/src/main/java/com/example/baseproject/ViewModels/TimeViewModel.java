@@ -32,11 +32,4 @@ public class TimeViewModel extends AndroidViewModel  {
         super(application);
         dateMutableLiveData = new MutableLiveData<>();
     }
-
-    // дата
-//    public LiveData<Date> getDate(){
-//        return dateMutableLiveData;
-//    }
-
-
 }
